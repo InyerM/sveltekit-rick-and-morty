@@ -31,18 +31,8 @@ npm run build
 
 You can run the newly built app with `npm run start`.
 
-## Deploying to GitHub Pages
+## Deploying to Vercel
 
-This project is ready to be deployed to [GitHub Pages](https://pages.github.com/) using [gh-pages](https://www.npmjs.com/package/gh-pages).
+This project is ready to be deployed to [Vercel](https://vercel.com/)
 
-First, login to GitHub CLI:
-
-```bash
-gh auth login
-```
-
-Then, run the following command to deploy:
-
-```bash
-npm run deploy
-```
+Ready on [RickAndMortySvelteKit](https://sveltekit-rick-and-morty-xlj3-ftk828z43-inyerm.vercel.app/)
