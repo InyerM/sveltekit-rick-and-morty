@@ -1,0 +1,1 @@
+<input type="search" class="search-box" placeholder="Search here..." />

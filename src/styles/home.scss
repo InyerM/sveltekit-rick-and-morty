@@ -1,0 +1,122 @@
+.page {
+  padding: 4rem 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 -10px;
+  padding: 0;
+  list-style: none;
+  @media (min-width: 768px) {
+    margin: 0 -20px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 10px 20px;
+    padding: 20px;
+    gap: .5rem;
+    border-radius: var(--rounded-xsm);
+    background-color: var(--bg-color-light);
+    @media (min-width: 768px) {
+      width: calc(50% - 20px);
+      margin: 0 20px 20px;
+    }
+    @media (min-width: 1024px) {
+      width: calc(33.333% - 20px);
+    }
+    .card__image {
+      width: 100%;
+      height: 200px;
+      margin-bottom: 20px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: var(--rounded-sm);
+    }
+    .card__title {
+      margin: 0 0 10px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .card__status {
+      padding: 0.5rem 0.8rem;
+      line-height: 1.2;
+      border-radius: var(--rounded-xsm);
+      color: var(--text);
+    }
+    .status_green {
+      background-color: var(--success);
+    }
+    .status_red {
+      background-color: var(--danger);
+    }
+    .status_gray{
+      background-color: var(--bg-color);
+    }
+    .card__description {
+      margin: 0 0 20px;
+      font-size: 14px;
+      line-height: 1.5;
+      padding: 0 0.8rem;
+    }
+    .card__link {
+      display: inline-block;
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--rounded-xsm);
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+      transition: all 0.3s ease-in-out;
+      &:hover {
+        background-color: #222;
+      }
+    }
+    .card__location {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--rounded-xsm);
+      gap: 0.5rem;
+      color: var(--text);
+      text-decoration: none;
+      background-color: #555;
+      i{
+        font-size: 1.2rem;
+      }
+    }
+    .card__gender {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--rounded-xsm);
+      gap: 0.5rem;
+      color: var(--text-light);
+      text-decoration: none;
+      color: var(--text);
+      i{
+        font-size: 1.2rem;
+      }
+    }
+    .gender_pink {
+      background-color: var(--pink);
+    }
+    .gender_blue {
+      background-color: var(--blue);
+    }
+    .gender_gray {
+      background-color: var(--text-light);
+    }
+  }
+}
