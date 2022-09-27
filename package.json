@@ -13,7 +13,7 @@
 	},
 	"dependencies": {
 		"axios": "^0.27.2",
-    "sass": "^1.55.0"
+		"sass": "^1.55.0"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",

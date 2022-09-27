@@ -1,63 +1,84 @@
 <script lang="ts">
+	import Card from "../../components/common/Card.svelte";
+	import Loader from "../../components/common/Loader.svelte";
+	import type { characters, charactersResponse } from "../../types";
+	import SearchBox from "../../components/common/SearchBox.svelte"
+  import { searchCharacters } from "../../services/characterService"
   import '../../styles/home.scss'
   import '../../styles/characters.scss'
-  import Card from '../../components/common/Card.svelte'
-	import type { characters } from 'src/types'
-	import Loader from '../../components/common/Loader.svelte'
-  import { getCharacters } from '../../services/characterService'
-  
+
   let characters: characters = []
   let error: string
   let loading = true
-  let page = 1
+  let currentPage = 1
   let pages = 42
   let isNextDisabled = false
   let isPrevDisabled = true
-  let currentPages = [1, 2, 3, 4, 5]
+  let currentPages = [1, 2]
+  let search = ''
+  let count = 0
+  let status: number
 
   async function getAllCharacters() {
-    const recentCharacters = await getCharacters(page)
+    const recentCharacters = await searchCharacters(currentPage, search)
     error = recentCharacters.error
+    pages = recentCharacters.info?.pages
+    count = recentCharacters.info?.count
+    status = recentCharacters.status
     characters = recentCharacters.characters
+    if(pages === 1){
+      currentPages = [1]
+    }
+    if(pages === 2){
+      currentPages = [1, 2]
+    }
     loading = false
   }
 
+  async function handleSearchChange(event: any) {
+    search = event.target.value
+    loading = true
+    currentPage = 1
+    currentPages = [1, 2]
+    await getAllCharacters()
+  }
+
   async function handleNextPage() {
-    page++
+    currentPage++
     loading = true
     setTimeout(async () => {
       await getAllCharacters();
-      if(page === pages) {
+      if(currentPage === pages) {
         isNextDisabled = true
       }
-      if(page > 1) {
+      if(currentPage > 1) {
         isPrevDisabled = false
       }
-      if(isLastOfCurrentPages(page)) {
+      if(isLastOfCurrentPages(currentPage)) {
         currentPages = currentPages.map(page => page + 1)
       }
     }, 500)
   }
 
   async function handlePreviousPage() {
-    page--
+    currentPage--
     loading = true
     setTimeout(async () => {
       await getAllCharacters();
-      if(page === 1) {
+      if(currentPage === 1) {
         isPrevDisabled = true
       }
-      if(page < pages) {
+      if(currentPage < pages) {
         isNextDisabled = false
       }
-      if(isFirstOfCurrentPages(page)){
+      if(isFirstOfCurrentPages(currentPage)){
         currentPages = currentPages.map((page) => page - 1)
       }
     }, 500)
   }
 
-  async function handlePage(currentPage: number) {
-    page = currentPage
+  async function handlePage(page: number) {
+    currentPage = page
     loading = true
     setTimeout(async () => {
       await getAllCharacters();
@@ -78,7 +99,10 @@
         currentPages = currentPages.map((page) => page - 1)
       }
       if(page === pages) {
-        currentPages = [pages - 4, pages - 3, pages - 2, pages - 1, pages]
+        currentPages = [pages - 1, pages]
+      }
+      if(page === 1) {
+        currentPages = [1, 2, 3, 4, 5]
       }
     }, 500)
   }
@@ -88,7 +112,7 @@
   }
 
   function isFirstOfCurrentPages(currentPage: number) {
-    return currentPage + 1 === currentPages[0] && currentPage !== 1
+    return currentPage + 1 === currentPages[0]
   }
 
   function isOnCurrentPages(currentPage: number) {
@@ -99,26 +123,42 @@
 </script>
 
 <main class="page">
-  <h1>All characters</h1>
+  <h1>Search characters</h1>
+  <SearchBox placeholder="Search characters" onChange={handleSearchChange}/>
+  {#if characters}
+  <div class="count">
+    <span>Showing {count} characters</span>
+  </div>
+  {/if}
   {#if loading}
-    <Loader className='mt'/>
+    <Loader className="mt" />
   {:else if error}
-    <p>Something went wrong</p>
+    {#if status === 404}
+      <div class="error">
+        <h2>Not found</h2>
+        <p>There are no characters with the name {search}</p>
+      </div>
+    {:else}
+      <div class="error">
+        <h2>Oops!</h2>
+        <p>Something went wrong</p>
+      </div>
+    {/if}
   {:else}
-    <!-- <div class="pagination">
-      <button on:click={handlePreviousPage} class={`${page === 1 && 'disabled'}`} disabled={isPrevDisabled}>⬅️ Previous</button>
-      <button on:click={handleNextPage} class={`${page === pages && 'disabled'}`} disabled={isNextDisabled}>Next ➡️</button>
-    </div> -->
     <div class="character-pagination">
-      <button on:click={handlePreviousPage} class={`${page === 1 && 'disabled'}`} disabled={isPrevDisabled}><i class='bx bxs-chevron-left'></i></button>
-      {#each currentPages as currentPage}
-        <button on:click={() => handlePage(currentPage)} class={`${page === currentPage && 'active'}`}>{currentPage}</button>
-      {/each}
-      {#if page < pages - 1 && !isOnCurrentPages(pages)}
-        <p>...</p>
-        <button on:click={() => handlePage(pages)} class={`${pages === page && 'active'}`}>{pages}</button>
+      <button on:click={handlePreviousPage} class={`${currentPage === 1 && 'disabled'}`} disabled={isPrevDisabled}><i class='bx bxs-chevron-left'></i></button>
+      {#if currentPage > 1 && !isOnCurrentPages(1)}
+      <button on:click={() => handlePage(1)} class={`${1 === currentPage && 'active'}`}>1</button>
+      <p>...</p>
       {/if}
-      <button on:click={handleNextPage} class={`${page === pages && 'disabled'}`} disabled={isNextDisabled}><i class='bx bxs-chevron-right'></i></button>
+      {#each currentPages as page}
+        <button on:click={() => handlePage(page)} class={`${page === currentPage && 'active'}`}>{page}</button>
+      {/each}
+      {#if currentPage < pages - 1 && !isOnCurrentPages(pages)}
+        <p>...</p>
+        <button on:click={() => handlePage(pages)} class={`${pages === currentPage && 'active'}`}>{pages}</button>
+      {/if}
+      <button on:click={handleNextPage} class={`${currentPage === pages && 'disabled'}`} disabled={isNextDisabled}><i class='bx bxs-chevron-right'></i></button>
     </div>
     <div class="cards">
       {#each characters as character}
