@@ -1,6 +1,18 @@
 <script lang="ts">
   import type { character } from '../../types'
   export let character: character
+  export let handleFavorite: (character: character) => void
+
+  function handleFavoriteClick() {
+    handleFavorite(character)
+    character.favorite = !character.favorite
+  }
+
+  const favoriteCharacters = JSON.parse(localStorage.getItem('favoriteCharacters') as string) || []
+  const favoriteCharacter = favoriteCharacters.find((favoriteCharacter: any) => favoriteCharacter.id === character.id)
+  if(favoriteCharacter) {
+    character.favorite = true
+  }
 </script>
 
 <div class="card">
@@ -24,5 +36,12 @@
     }
     {character.gender}</p>
   <p class={`${character.status === 'Alive' ? 'status_green' : character.status === 'Dead' ? 'status_red' : 'status_gray'} card__status`}>{character.status} - {character.species}</p>
-  <a class="card__link" href={character.url}>More info</a>
+  <a class="card__link" href={`/characters/${character.id}`}>More info</a>
+  <button class="favorite" on:click={() => handleFavoriteClick()}>
+    {#if character?.favorite}
+      <label for="checkbox" class="favorite__label"><i class='bx bxs-heart'></i></label>
+    {:else}
+      <label for="checkbox" class="favorite__label"><i class='bx bx-heart'></i></label>
+    {/if}
+  </button>
 </div>

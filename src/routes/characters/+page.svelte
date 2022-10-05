@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Card from "../../components/common/Card.svelte";
 	import Loader from "../../components/common/Loader.svelte";
-	import type { characters, charactersResponse } from "../../types";
+	import type { character, characters, charactersResponse } from "../../types";
 	import SearchBox from "../../components/common/SearchBox.svelte"
   import { searchCharacters } from "../../services/characterService"
   import '../../styles/home.scss'
@@ -119,9 +119,24 @@
     return currentPages.includes(currentPage)
   }
 
+  async function handleFavorite (character: character){
+    const favoriteCharacters = JSON.parse(localStorage.getItem('favoriteCharacters') as string) || []
+    const isFavorite = favoriteCharacters.find((favoriteCharacter: character) => favoriteCharacter.id === character.id)
+    if(isFavorite) {
+      const newFavoriteCharacters = favoriteCharacters.filter((favoriteCharacter: character) => favoriteCharacter.id !== character.id)
+      localStorage.setItem('favoriteCharacters', JSON.stringify(newFavoriteCharacters))
+    } else {
+      favoriteCharacters.push(character)
+      localStorage.setItem('favoriteCharacters', JSON.stringify(favoriteCharacters))
+    }
+  }
+
   getAllCharacters()
 </script>
 
+<head>
+  <title>Characters</title>
+</head>
 <main class="page">
   <h1>Search characters</h1>
   <SearchBox placeholder="Search characters" onChange={handleSearchChange}/>
@@ -162,7 +177,7 @@
     </div>
     <div class="cards">
       {#each characters as character}
-        <Card character={character} />
+        <Card character={character} handleFavorite={handleFavorite}/>
       {/each}
     </div>
   {/if}

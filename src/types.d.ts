@@ -17,6 +17,7 @@ export type character = {
   episode: string[]
   url: string
   created: string
+  favorite?: boolean
 }
 
 export type characters = character[]
@@ -30,4 +31,14 @@ export type charactersResponse = {
     prev: string
   }
   results: characters
+}
+
+export type episode = {
+  id: number
+  name: string
+  air_date: string
+  episode: string
+  characters: string[]
+  url: string
+  created: string
 }

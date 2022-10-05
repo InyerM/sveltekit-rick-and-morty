@@ -19,6 +19,9 @@
   getCharacters()
 </script>
 
+<head>
+  <title>Home</title>
+</head>
 <main class="page">
   <h1>Most recent characters</h1>
   {#if loading}
