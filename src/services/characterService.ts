@@ -30,7 +30,6 @@ export const getCharacter = async (id: number) => {
       return url.toString().split('/').pop()
     })
     episodes = await (await getEpisodes(mainEpisodes)).episodes
-    console.log("🚀 ~ file: characterService.ts ~ line 33 ~ getCharacter ~ episodes", episodes)
   } catch (err: any) {
     error = err.message || 'Something went wrong'
     status = err.status

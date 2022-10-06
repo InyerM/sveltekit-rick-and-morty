@@ -7,5 +7,6 @@
   <nav class="header_nav">
     <a href="/" class="header_nav-link">Home</a>
     <a href="/characters" class="header_nav-link">Characters</a>
+    <a href="/favorites" class="header_nav-link">Favorites</a>
   </nav>
 </header>

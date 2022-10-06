@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores'
+  import { goto } from '$app/navigation'
 	import CharacterCard from '../../../components/common/CharacterCard.svelte';
 	import Loader from '../../../components/common/Loader.svelte';
 	import type { character, episode } from 'src/types';
@@ -44,6 +45,11 @@
     <p>Something went wrong</p>
     <span>{error}</span>
   {:else}
+    <button class="back" on:click={() => goto('/characters')}>
+      <span>
+        <i class='bx bx-arrow-back'></i> Back
+      </span>
+    </button>
     <CharacterCard character={character} episodes={episodes} handleFavorite={handleFavorite}/>
   {/if}
 </main>

@@ -77,3 +77,50 @@
     letter-spacing: 0.2rem;
   }
 }
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  max-width: var(--lg);
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--rounded-xsm);
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    div{
+      width: 100%;
+    }
+  }
+  div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--rounded-xsm);
+    background-color: var(--bg-color-light);
+    label{
+      font-size: 1rem;
+      color: var(--text-light);
+      margin: 0 5px;
+      letter-spacing: 0rem;
+    }
+    select{
+      margin: 0 5px;
+      padding: 0.5rem 1.1rem;
+      border-radius: var(--rounded-xsm);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-light);
+      background-color: var(--bg-color-dark);
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      option{
+        background: #555;
+      }
+    }
+  }
+}

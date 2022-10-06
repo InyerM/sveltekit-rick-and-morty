@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Card from "../../components/common/Card.svelte";
 	import Loader from "../../components/common/Loader.svelte";
-	import type { character, characters, charactersResponse } from "../../types";
+	import type { character, characters } from "../../types";
 	import SearchBox from "../../components/common/SearchBox.svelte"
   import { searchCharacters } from "../../services/characterService"
   import '../../styles/home.scss'
@@ -120,6 +120,14 @@
     return currentPages.includes(currentPage)
   }
 
+  async function onReset () {
+    search = ''
+    loading = true
+    currentPage = 1
+    currentPages = [1, 2, 3, 4, 5]
+    await getAllCharacters()
+  }
+
   async function handleFavorite (character: character){
     const favoriteCharacters = JSON.parse(localStorage.getItem('favoriteCharacters') as string) || []
     const isFavorite = favoriteCharacters.find((favoriteCharacter: character) => favoriteCharacter.id === character.id)
@@ -152,7 +160,45 @@
 </head>
 <main class="page">
   <h1>Search characters</h1>
-  <SearchBox placeholder="Search characters" onChange={handleSearchChange}/>
+  <SearchBox placeholder="Search characters" onChange={handleSearchChange} onReset={onReset}/>
+  <div class="filter">
+    <div class="filter_status">
+      <label for="status">Status</label>
+      <select on:input={handleFilter} value={filter[0]} id="status">
+        <option value="">All</option>
+        <option value="alive">Alive</option>
+        <option value="dead">Dead</option>
+        <option value="unknown">Unknown</option>
+      </select>
+    </div>
+    <div class="filter_gender">
+      <label for="gender">Gender</label>
+      <select on:input={handleFilter} value={filter[1]} id="gender">
+        <option value="">All</option>
+        <option value="female">Female</option>
+        <option value="male">Male</option>
+        <option value="genderless">Genderless</option>
+        <option value="unknown">Unknown</option>
+      </select>
+    </div>
+    <div class="filter_species">
+      <label for="species">Species</label>
+      <select on:input={handleFilter} value={filter[2]} id="species">
+        <option value="">All</option>
+        <option value="human">Human</option>
+        <option value="alien">Alien</option>
+        <option value="humanoid">Humanoid</option>
+        <option value="poopybutthole">Poopybutthole</option>
+        <option value="mythological">Mythological</option>
+        <option value="animal">Animal</option>
+        <option value="robot">Robot</option>
+        <option value="cronenberg">Cronenberg</option>
+        <option value="disease">Disease</option>
+        <option value="parasite">Parasite</option>
+        <option value="unknown">Unknown</option>
+      </select>
+    </div>
+  </div>
   {#if characters}
   <div class="count">
     <span>Showing {count} characters</span>
@@ -187,35 +233,6 @@
         <button on:click={() => handlePage(pages)} class={`${pages === currentPage && 'active'}`}>{pages}</button>
       {/if}
       <button on:click={handleNextPage} class={`${currentPage === pages && 'disabled'}`} disabled={isNextDisabled}><i class='bx bxs-chevron-right'></i></button>
-    </div>
-    <div class="filter">
-      <select on:input={handleFilter} value={filter[0]} id="status">
-        <option value="">All</option>
-        <option value="alive">Alive</option>
-        <option value="dead">Dead</option>
-        <option value="unknown">Unknown</option>
-      </select>
-      <select on:input={handleFilter} value={filter[1]} id="gender">
-        <option value="">All</option>
-        <option value="female">Female</option>
-        <option value="male">Male</option>
-        <option value="genderless">Genderless</option>
-        <option value="unknown">Unknown</option>
-      </select>
-      <select on:input={handleFilter} value={filter[2]} id="species">
-        <option value="">All</option>
-        <option value="human">Human</option>
-        <option value="alien">Alien</option>
-        <option value="humanoid">Humanoid</option>
-        <option value="poopybutthole">Poopybutthole</option>
-        <option value="mythological">Mythological</option>
-        <option value="animal">Animal</option>
-        <option value="robot">Robot</option>
-        <option value="cronenberg">Cronenberg</option>
-        <option value="disease">Disease</option>
-        <option value="parasite">Parasite</option>
-        <option value="unknown">Unknown</option>
-      </select>
     </div>
     <div class="cards">
       {#each characters as character}
