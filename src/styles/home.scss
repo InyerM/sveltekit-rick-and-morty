@@ -64,6 +64,8 @@
       width: 70%;
     }
     .card__status {
+      display: flex;
+      align-items: center;
       padding: 0.5rem 0.8rem;
       line-height: 1.2;
       border-radius: var(--rounded-xsm);
@@ -217,6 +219,8 @@
       background-color: var(--text-light);
     }
     .card__status {
+      display: flex;
+      align-items: center;
       padding: 0.8rem 0.8rem;
       line-height: 1.2;
       border-radius: var(--rounded-xsm);

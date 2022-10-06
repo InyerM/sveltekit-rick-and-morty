@@ -16,16 +16,17 @@
   let isPrevDisabled = true
   let currentPages = [1, 2]
   let search = ''
+  let filter = ['', '', '']
   let count = 0
   let status: number
 
   async function getAllCharacters() {
-    const recentCharacters = await searchCharacters(currentPage, search)
+    const recentCharacters = await searchCharacters(currentPage, search, filter)
     error = recentCharacters.error
-    pages = recentCharacters.info?.pages
     count = recentCharacters.info?.count
     status = recentCharacters.status
     characters = recentCharacters.characters
+    pages = recentCharacters.info?.pages
     if(pages === 1){
       currentPages = [1]
     }
@@ -131,6 +132,18 @@
     }
   }
 
+  async function handleFilter (event: any) {
+    const { target } = event
+    const { value } = target
+    loading = true
+    
+    if(target?.id === 'status') filter[0] = value
+    else if(target?.id === 'gender') filter[1] = value
+    else if(target?.id === 'species') filter[2] = value
+
+    await getAllCharacters()
+  }
+
   getAllCharacters()
 </script>
 
@@ -174,6 +187,35 @@
         <button on:click={() => handlePage(pages)} class={`${pages === currentPage && 'active'}`}>{pages}</button>
       {/if}
       <button on:click={handleNextPage} class={`${currentPage === pages && 'disabled'}`} disabled={isNextDisabled}><i class='bx bxs-chevron-right'></i></button>
+    </div>
+    <div class="filter">
+      <select on:input={handleFilter} value={filter[0]} id="status">
+        <option value="">All</option>
+        <option value="alive">Alive</option>
+        <option value="dead">Dead</option>
+        <option value="unknown">Unknown</option>
+      </select>
+      <select on:input={handleFilter} value={filter[1]} id="gender">
+        <option value="">All</option>
+        <option value="female">Female</option>
+        <option value="male">Male</option>
+        <option value="genderless">Genderless</option>
+        <option value="unknown">Unknown</option>
+      </select>
+      <select on:input={handleFilter} value={filter[2]} id="species">
+        <option value="">All</option>
+        <option value="human">Human</option>
+        <option value="alien">Alien</option>
+        <option value="humanoid">Humanoid</option>
+        <option value="poopybutthole">Poopybutthole</option>
+        <option value="mythological">Mythological</option>
+        <option value="animal">Animal</option>
+        <option value="robot">Robot</option>
+        <option value="cronenberg">Cronenberg</option>
+        <option value="disease">Disease</option>
+        <option value="parasite">Parasite</option>
+        <option value="unknown">Unknown</option>
+      </select>
     </div>
     <div class="cards">
       {#each characters as character}

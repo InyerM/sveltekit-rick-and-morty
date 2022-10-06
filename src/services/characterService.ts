@@ -21,7 +21,6 @@ export const getCharacter = async (id: number) => {
   let error, character, info, status, episodes
   try {
     const response = await axios.get(`${baseUrl}/character/${id}`)
-    console.log("🚀 ~ file: characterService.ts ~ line 24 ~ getCharacter ~ response", response)
     const { data } = response
     character = data
     info = data.info
@@ -30,8 +29,8 @@ export const getCharacter = async (id: number) => {
     const mainEpisodes = character?.episode?.sort(() => Math.random() - 0.5).slice(0, 3).map((url: string) => {
       return url.toString().split('/').pop()
     })
-    console.log("🚀 ~ file: characterService.ts ~ line 33 ~ mainEpisodes ~ mainEpisodes", mainEpisodes)
     episodes = await (await getEpisodes(mainEpisodes)).episodes
+    console.log("🚀 ~ file: characterService.ts ~ line 33 ~ getCharacter ~ episodes", episodes)
   } catch (err: any) {
     error = err.message || 'Something went wrong'
     status = err.status
@@ -46,10 +45,12 @@ export const getCharacter = async (id: number) => {
   }
 }
 
-export const searchCharacters = async (page: number, query: string) => {
+export const searchCharacters = async (page: number, query: string, filter: string[]) => {
   let error, characters, info, status = 0
+  const url = `${baseUrl}/character/?page=${page}&name=${query}&status=${filter[0] || ''}&species=${filter[2] || ''}&gender=${filter[1] || ''}`
+
   try {
-    const response = await axios.get(`${baseUrl}/character/?name=${query}&page=${page}`)
+    const response = await axios.get(url)
     const { data } = response
     info = data.info
     characters = data.results
@@ -79,6 +80,15 @@ export const getEpisodes = async (episodesUrl: number[]) => {
     error = err.message || 'Something went wrong'
     status = err.status
   } 
+
+  if(episodesUrl.length === 1) {
+    return {
+      episodes: [episodes],
+      error,
+      info,
+      status,
+    }
+  }
 
   return { 
     episodes, 

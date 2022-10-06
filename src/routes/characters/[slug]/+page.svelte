@@ -35,7 +35,7 @@
 </script>
 
 <head>
-  <title>{$page.params.slug}</title>
+  <title>{character?.name}</title>
 </head>
 <main class="page">
   {#if loading}
